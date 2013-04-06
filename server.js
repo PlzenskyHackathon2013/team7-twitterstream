@@ -2,7 +2,11 @@
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
+var mongodb = require('mongodb');
+var http = require('http');
 
+// query passed to twitter search
+var twitterQuery = "nodejs";
 
 /**
  *  Define the sample application.
@@ -44,6 +48,13 @@ var SampleApp = function() {
 
         //  Local cache for static content.
         self.zcache['index.html'] = fs.readFileSync('./index.html');
+    };
+
+    self.initializeMongoDb = function() {
+        // TODO: where to get params for openshift?
+        var server = new mongodb.Server("127.0.0.1", 27017, {});
+        self.mongoStorage = new mongodb.Db('twitterstream', server, {safe:false});
+
     };
 
 
@@ -95,8 +106,33 @@ var SampleApp = function() {
     self.createRoutes = function() {
         self.routes = { };
 
-        self.routes['/tweets'] = function(req, res) {
-            res.send('it works!');
+        self.routes['/tweets'] = function (req, res) {
+
+            var options = {
+                host: 'search.twitter.com',
+                path: '/search.json?q='+twitterQuery+'&page=10'
+            };
+
+            var outres = res;
+            http.get(options, function(res) {
+                var output = '';
+                console.log(options.host + ':' + res.statusCode);
+                res.setEncoding('utf8');
+
+                res.on('data', function (chunk) {
+                    output += chunk;
+                });
+
+                res.on('end', function() {
+                    var obj = JSON.parse(output)
+                    outres.set('Content-Type', 'text/javascript');
+                    outres.send(obj.results);
+                });
+            }).on('error', function(e) {
+                    console.log('ERROR: ' + e.message);
+                });
+
+
         };
 
         // Routes for /health, /asciimo, /env and /
@@ -152,6 +188,8 @@ var SampleApp = function() {
         self.setupVariables();
         self.populateCache();
         self.setupTerminationHandlers();
+
+        self.initializeMongoDb();
 
         // Create the express server and routes.
         self.initializeServer();
