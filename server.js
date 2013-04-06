@@ -186,9 +186,11 @@ var SampleApp = function() {
             });
 
 
-            self.websocketListeners.forEach(function(callback){
-                callback(tweet);
-            });
+            if (typeof self.websocketListeners !== "undefined") {
+                self.websocketListeners.forEach(function (callback) {
+                    callback(tweet);
+                });
+            }
 
             console.log("New tweet stored");
 
