@@ -57,10 +57,12 @@ var SampleApp = function() {
 
         var server = new mongodb.Server(mongoIp, mongoPort, {});
         self.mongoStorage = new mongodb.Db('twitterstream', server, {safe:false, auto_reconnect: true});
-        if(mongoUser != null && mongoPass != null) {
-            self.mongoStorage.authenticate(mongoUser, mongoPass, function(err, res) {});
-        }
-        self.mongoStorage.open(function(){});
+        self.mongoStorage.open(function(){
+            if(mongoUser != null && mongoPass != null) {
+                self.mongoStorage.authenticate(mongoUser, mongoPass, function(err, res) {});
+            }
+        });
+
     };
 
     self.initializeTwitter = function() {
