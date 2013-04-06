@@ -184,14 +184,13 @@ var SampleApp = function() {
                 collection.insert(tweet);
             });
 
-            self.sockets.on('connection', function (socket) {
-                socket.emit('news', { hello: 'world' });
-                socket.on('my other event', function (data) {
-                    console.log(data);
-                });
+
+            self.websocketListeners.forEach(function(callback){
+                callback(tweet);
             });
+
             console.log("New tweet stored");
-            //console.log(tweet)
+
         });
     };
 
@@ -274,9 +273,18 @@ var SampleApp = function() {
         self.app.listen(self.port, self.ipaddress, function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
-            var io = require('socket.io').listen(require('http').createServer(self.app));
-            //var io = require('socket.io').listen(8081);
+            //var io = require('socket.io').listen(require('http').createServer(self.app));
+            var io = require('socket.io').listen(8081);
+
+            self.websocketListeners = [];
             self.sockets = io;
+            self.sockets.on('connection', function (socket) {
+                self.websocketListeners.push(function (tweet) {
+                    socket.volatile.emit('tweet', tweet);
+                });
+            });
+
+
         });
     };
 

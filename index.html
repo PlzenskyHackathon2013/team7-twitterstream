@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="public/css/custom.css" />
     <link rel="shortcut icon" href="public/img/favicon.ico" />
     <script type="text/javascript" src="public/js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="public/js/bootstrap.min.js"></script>
+    <!--<script type="text/javascript" src="public/js/bootstrap.min.js"></script>-->
     <script type="text/javascript" src="/public/js/socket.io.min.js"></script>
 </head>
 <body>
@@ -79,9 +79,11 @@
 
 <script>
     var socket = io.connect('http://localhost:8081');
-    socket.on('tweets', function (data) {
+    socket.on('tweet', function (data) {
         console.log(data);
+
     });
+
 </script>
 
 
