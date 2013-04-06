@@ -268,13 +268,16 @@ var SampleApp = function() {
     /**
      *  Start the server (starts up the sample application).
      */
-    self.start = function() {
+    self.start = function () {
+
+        var server = require('http').createServer(self.app);
+        var io = require('socket.io').listen(server);
+
+
         //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
+        server.listen(self.port, self.ipaddress, function () {
             console.log('%s: Node server started on %s:%d ...',
-                        Date(Date.now() ), self.ipaddress, self.port);
-            //var io = require('socket.io').listen(require('http').createServer(self.app));
-            var io = require('socket.io').listen(8081);
+                Date(Date.now()), self.ipaddress, self.port);
 
             self.websocketListeners = [];
             self.sockets = io;
@@ -288,8 +291,7 @@ var SampleApp = function() {
         });
     };
 
-};   /*  Sample Application.  */
-
+};
 
 
 /**
