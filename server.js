@@ -136,6 +136,13 @@ var SampleApp = function() {
 
         };
 
+        self.routes['/tweetskeywords'] = function (req, res) {
+            res.set('Content-Type', 'text/html');
+            res.send(config.monitor.keywords);
+
+
+        };
+
         // Routes for /health, /asciimo, /env and /
         self.routes['/health'] = function(req, res) {
             res.send('1');
