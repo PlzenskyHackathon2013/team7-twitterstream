@@ -130,7 +130,7 @@ var SampleApp = function() {
             self.mongoStorage.collection("tweets", function (err, collection) {
                 collection.count(function (err, count) {
                     res.set('Content-Type', 'text/html');
-                    res.send(count);
+                    res.send(""+count);
                 });
             });
 
