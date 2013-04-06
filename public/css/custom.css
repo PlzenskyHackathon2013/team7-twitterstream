@@ -57,8 +57,3 @@ footer {
 }
 
 .dropdown-menu {z-index:1000}
-
-
-.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
-    max-width: 940px;
-}
