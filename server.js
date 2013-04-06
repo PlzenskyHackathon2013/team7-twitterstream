@@ -95,6 +95,10 @@ var SampleApp = function() {
     self.createRoutes = function() {
         self.routes = { };
 
+        self.routes['/tweets'] = function(req, res) {
+            res.send('it works!');
+        };
+
         // Routes for /health, /asciimo, /env and /
         self.routes['/health'] = function(req, res) {
             res.send('1');
