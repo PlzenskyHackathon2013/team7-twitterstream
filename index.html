@@ -17,7 +17,7 @@
 <div class="container">
     <div class="content">
         <div class="page-header">
-            <h1><img src="public/img/twitter-bird.png" />TwitterStream <small>lorem ipsum</small></h1>
+            <h1><img src="public/img/twitter-bird.png" />TwitterStream</h1>
         </div>
         <div class="row">
             <div class="span8">
@@ -59,6 +59,9 @@
                                 '<div class="row">' +
                                 '<div class="span8"><p><i class="icon-user"></i> by <a href="http://twitter.com/' + tweet.user.screen_name + '" target="_blank">' + tweet.user.name + '</a> | ' +
                                 '<i class="icon-calendar"></i> ' + tweet_date + '</p></div></div></div></div><hr>');
+            if($("#tweets").children().size() > 20) {
+                $("#tweets").children().last().remove();
+            }
             $("#tweets").prepend(tweet_html);
             $("#counter").text(parseInt($("#counter").text())+1);
         });
