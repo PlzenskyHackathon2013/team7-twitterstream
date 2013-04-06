@@ -53,9 +53,27 @@ var SampleApp = function() {
     self.initializeMongoDb = function() {
         // TODO: where to get params for openshift?
         var server = new mongodb.Server("127.0.0.1", 27017, {});
-        self.mongoStorage = new mongodb.Db('twitterstream', server, {safe:false});
-
+        self.mongoStorage = new mongodb.Db('twitterstream', server, {safe:false, auto_reconnect: true});
+        self.mongoStorage.open(function(){});
     };
+
+    self.initializeTwitter = function() {
+        var Twit = require('twit');
+
+        //TODO: refactor to config file outside version control
+        // demo user hackathonTwit/lorem12ipsum
+        consumerKey="lakn8LGFoAogtKaWkk8Rg";
+        consumerSecret="XaKms3yUQ9oDWsnhf7Y4Isp8Zz0vQjfEmU40G2WI";
+        accessToken="1331575776-jzsNA8uOJHhb8oj8QK1ZoN4F1VUZ07KXGNXsgmN";
+        accessTokenSecret="T8ASqSwaIAsk8yNUlzCwu8tuGmDzCSuEPWtQJVk01M";
+
+        self.twitter = new Twit({
+            consumer_key: consumerKey,
+            consumer_secret: consumerSecret,
+            access_token: accessToken,
+            access_token_secret: accessTokenSecret
+        })
+    }
 
 
     /**
@@ -107,31 +125,11 @@ var SampleApp = function() {
         self.routes = { };
 
         self.routes['/tweets'] = function (req, res) {
-
-            var options = {
-                host: 'search.twitter.com',
-                path: '/search.json?q='+twitterQuery+'&page=10'
-            };
-
-            var outres = res;
-            http.get(options, function(res) {
-                var output = '';
-                console.log(options.host + ':' + res.statusCode);
-                res.setEncoding('utf8');
-
-                res.on('data', function (chunk) {
-                    output += chunk;
+            self.mongoStorage.collection("tweets", function (err, collection) {
+                collection.count(function (err, count) {
+                    res.send('Docs count:' + count);
                 });
-
-                res.on('end', function() {
-                    var obj = JSON.parse(output)
-                    outres.set('Content-Type', 'text/javascript');
-                    outres.send(obj.results);
-                });
-            }).on('error', function(e) {
-                    console.log('ERROR: ' + e.message);
-                });
-
+            });
 
         };
 
@@ -192,6 +190,8 @@ var SampleApp = function() {
 
         self.initializeMongoDb();
 
+        self.initializeTwitter();
+
         // Create the express server and routes.
         self.initializeServer();
     };
@@ -206,6 +206,19 @@ var SampleApp = function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
         });
+
+        var stream = self.twitter.stream('statuses/filter', {track:'prague'});
+
+
+        stream.on('tweet', function (tweet) {
+
+            self.mongoStorage.collection("tweets", function (err, collection) {
+                collection.insert(tweet);
+            });
+            console.log(tweet)
+        });
+
+
     };
 
 };   /*  Sample Application.  */

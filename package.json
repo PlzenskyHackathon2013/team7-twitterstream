@@ -26,7 +26,8 @@
 
   "dependencies": {
     "express": "*",
-    "mongodb": "*"
+    "mongodb": "*",
+    "twit": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
