@@ -4,6 +4,7 @@ var express = require('express');
 var fs      = require('fs');
 var mongodb = require('mongodb');
 var http = require('http');
+var io = require('socket.io');
 
 var config = require('./config.js');
 
@@ -167,7 +168,7 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         self.createRoutes();
-        self.app = express.createServer();
+        self.app = express();
         self.app.use('/public', express.static(__dirname + '/public'));
 
         //  Add handlers for the app (from the routes).
@@ -182,6 +183,11 @@ var SampleApp = function() {
             self.mongoStorage.collection("tweets", function (err, collection) {
                 collection.insert(tweet);
             });
+            var socketsio = io.listen(self.server);
+            socketsio.sockets.on('connection', function (socket) {
+                socket.emit('tweets', tweet);
+            });
+
             console.log(tweet)
         });
     };
