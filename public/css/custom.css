@@ -1,0 +1,64 @@
+/* Override some defaults */
+html, body {
+	background: url('../img/background.png') repeat top center;
+}
+
+/* The white background content wrapper */
+.content {
+	background-color: #fff;
+	padding: 20px;
+	margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+	-webkit-border-radius: 0 0 6px 6px;
+		 -moz-border-radius: 0 0 6px 6px;
+					border-radius: 0 0 6px 6px;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+		 -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+					box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+
+
+/* Page header tweaks */
+.page-header {
+	background-color: #f5f5f5;
+	padding: 20px 20px 10px;
+	margin: -20px -20px 20px;
+}
+
+
+/* Give a quick and non-cross-browser friendly divider */
+.content .span4 {
+	margin-left: 6px;
+	margin-right: -6px;
+	padding-left: 18px;
+	border-left: 1px solid #eee;
+	min-height:500px;
+}
+
+.layout-menu {
+	margin-left:0px;
+	padding-left:0px;
+}
+
+.layout-menu li {
+	list-style-type: none;
+}
+
+/* 40px to make the container go all the way to the bottom of the topbar */
+body {
+    padding-top: 40px;
+}
+
+footer {
+    margin-top:15px;
+    padding-top:10px;
+    border-top:1px solid #EEE;
+    text-align:center;
+    clear:both;
+}
+
+.dropdown-menu {z-index:1000}
+
+
+.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+    max-width: 940px;
+}
