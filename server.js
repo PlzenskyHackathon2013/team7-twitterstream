@@ -51,9 +51,16 @@ var SampleApp = function() {
     };
 
     self.initializeMongoDb = function() {
-        // TODO: where to get params for openshift?
-        var server = new mongodb.Server("127.0.0.1", 27017, {});
+        var mongoUser = process.env.OPENSHIFT_MONGODB_DB_USERNAME || null;
+        var mongoPass = process.env.OPENSHIFT_MONGODB_DB_PASSWORD || null;
+        var mongoIp = process.env.OPENSHIFT_MONGODB_DB_HOST || "127.0.0.1";
+        var mongoPort = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
+
+        var server = new mongodb.Server(mongoIp, mongoPort, {});
         self.mongoStorage = new mongodb.Db('twitterstream', server, {safe:false, auto_reconnect: true});
+        if(mongoUser != null && mongoPass != null) {
+            self.mongoStorage.authenticate(mongoUser, mongoPass, function(err, res) {});
+        }
         self.mongoStorage.open(function(){});
     };
 
