@@ -138,11 +138,6 @@ var SampleApp = function() {
             res.send('1');
         };
 
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
         self.routes['/env'] = function(req, res) {
             var content = 'Version: ' + process.version + '\n<br/>\n' +
                           'Env: {<br/>\n<pre>';
@@ -179,6 +174,22 @@ var SampleApp = function() {
         }
     };
 
+    self.startMonitor = function () {
+        var stream = self.twitter.stream('statuses/filter', {track: config.monitor.keywords});
+        stream.on('tweet', function (tweet) {
+            self.mongoStorage.collection("tweets", function (err, collection) {
+                collection.insert(tweet);
+            });
+            console.log(tweet)
+        });
+    };
+
+    self.startSender = function () {
+        setInterval(function () {
+            console.log("Sending tweets to url " + config.submit.url);
+        }, config.submit.period);
+    };
+
 
     /**
      *  Initializes the sample application.
@@ -194,6 +205,11 @@ var SampleApp = function() {
 
         // Create the express server and routes.
         self.initializeServer();
+
+        // Start twitter stream monitoring
+        self.startMonitor();
+        // Start sending stored tweets to defined url
+        self.startSender();
     };
 
 
@@ -206,19 +222,6 @@ var SampleApp = function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
         });
-
-        var stream = self.twitter.stream('statuses/filter', {track:config.monitor.keywords});
-
-
-        stream.on('tweet', function (tweet) {
-
-            self.mongoStorage.collection("tweets", function (err, collection) {
-                collection.insert(tweet);
-            });
-            console.log(tweet)
-        });
-
-
     };
 
 };   /*  Sample Application.  */

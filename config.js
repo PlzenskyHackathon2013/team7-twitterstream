@@ -9,5 +9,10 @@ module.exports = {
     },
     monitor: {
         keywords: "prague"
+    },
+    submit: {
+        url:"http://localhost",
+        period: 1000 * 10 // 10secs
     }
+
 };
