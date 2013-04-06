@@ -9,7 +9,7 @@ module.exports = {
         accessTokenSecret: "T8ASqSwaIAsk8yNUlzCwu8tuGmDzCSuEPWtQJVk01M"
     },
     monitor: {
-        keywords: "coffe,prague,java"
+        keywords: "coffe,java,hack"
     },
     submit: {
         url:"http://www.tomas-dvorak.cz/listener.php",

@@ -61,3 +61,4 @@ footer {
 h1 img {float: left; left: -15px; top: -20px; position: relative; }
 
 #loader {height: 32px; background: url(../img/ajax-loader.gif) 50% 0 no-repeat;}
+#counter {font-size: 200%; font-weight: bold; line-height: 1;}

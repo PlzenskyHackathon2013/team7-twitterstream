@@ -27,7 +27,11 @@
                 <div id="tweets"></div>
             </div>
             <div class="span4">
-                <h3>TOP tweets</h3>
+                <h3>Tweets counter</h3>
+                <div class="alert alert-info">
+                    <div id="counter">0</div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -43,17 +47,20 @@
 
 <script>
     $(function () {
+        $("#counter").load("/tweetscount");
+
         var socket = io.connect(window.location.hostname);
         socket.on('tweet', function (tweet) {
             var tweet_date = new Date(tweet.created_at).toLocaleTimeString();
             var tweet_html =  $('<div class="row">' +
-                                    '<div class="span1"><img src="' + tweet.user.profile_image_url + '" alt="" class="img-rounded"></div>' +
+                                    '<div class="span1"><a href="http://twitter.com/' + tweet.user.screen_name + '" target="_blank"><img src="' + tweet.user.profile_image_url + '" alt="" class="img-rounded"></a></div>' +
                                     '<div class="span6"><p>' + tweet.text + '</p></div>' +
                                 '</div><br/>' +
                                 '<div class="row">' +
                                 '<div class="span8"><p><i class="icon-user"></i> by <a href="http://twitter.com/' + tweet.user.screen_name + '" target="_blank">' + tweet.user.name + '</a> | ' +
                                 '<i class="icon-calendar"></i> ' + tweet_date + '</p></div></div></div></div><hr>');
             $("#tweets").prepend(tweet_html);
+            $("#counter").text(parseInt($("#counter").text())+1);
         });
     });
 </script>
