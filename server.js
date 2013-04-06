@@ -5,8 +5,7 @@ var fs      = require('fs');
 var mongodb = require('mongodb');
 var http = require('http');
 
-// query passed to twitter search
-var twitterQuery = "nodejs";
+var config = require('./config.js');
 
 /**
  *  Define the sample application.
@@ -67,18 +66,12 @@ var SampleApp = function() {
     self.initializeTwitter = function() {
         var Twit = require('twit');
 
-        //TODO: refactor to config file outside version control
-        // demo user hackathonTwit/lorem12ipsum
-        consumerKey="lakn8LGFoAogtKaWkk8Rg";
-        consumerSecret="XaKms3yUQ9oDWsnhf7Y4Isp8Zz0vQjfEmU40G2WI";
-        accessToken="1331575776-jzsNA8uOJHhb8oj8QK1ZoN4F1VUZ07KXGNXsgmN";
-        accessTokenSecret="T8ASqSwaIAsk8yNUlzCwu8tuGmDzCSuEPWtQJVk01M";
 
         self.twitter = new Twit({
-            consumer_key: consumerKey,
-            consumer_secret: consumerSecret,
-            access_token: accessToken,
-            access_token_secret: accessTokenSecret
+            consumer_key: config.twitter.consumerKey,
+            consumer_secret: config.twitter.consumerSecret,
+            access_token: config.twitter.accessToken,
+            access_token_secret: config.twitter.accessTokenSecret
         })
     }
 
@@ -214,7 +207,7 @@ var SampleApp = function() {
                         Date(Date.now() ), self.ipaddress, self.port);
         });
 
-        var stream = self.twitter.stream('statuses/filter', {track:'prague'});
+        var stream = self.twitter.stream('statuses/filter', {track:config.monitor.keywords});
 
 
         stream.on('tweet', function (tweet) {
