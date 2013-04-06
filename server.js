@@ -78,7 +78,6 @@ var SampleApp = function() {
         })
     }
 
-
     /**
      *  Retrieve entry (content) from cache.
      *  @param {string} key  Key identifying content to retrieve from cache.
@@ -184,6 +183,12 @@ var SampleApp = function() {
                 collection.insert(tweet);
             });
 
+            self.sockets.on('connection', function (socket) {
+                socket.emit('news', { hello: 'world' });
+                socket.on('my other event', function (data) {
+                    console.log(data);
+                });
+            });
             console.log(tweet)
         });
     };
@@ -225,16 +230,9 @@ var SampleApp = function() {
         self.app.listen(self.port, self.ipaddress, function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
+            var io = require('socket.io').listen(require('http').createServer(self.app));
+            self.sockets = io;
         });
-
-        var io = require('socket.io').listen(8081);
-        io.sockets.on('connection', function (socket) {
-            socket.emit('news', { hello: 'world' });
-            socket.on('my other event', function (data) {
-                console.log(data);
-            });
-        });
-
     };
 
 };   /*  Sample Application.  */
