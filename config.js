@@ -13,7 +13,7 @@ module.exports = {
     },
     submit: {
         url:"http://www.tomas-dvorak.cz/listener.php",
-        period: 1000 * 10 // 10secs
+        period: 1000 * 30 // 10secs
     }
 
 };

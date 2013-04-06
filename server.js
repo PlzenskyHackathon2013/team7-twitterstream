@@ -206,13 +206,12 @@ var SampleApp = function() {
 
                 self.mongoStorage.collection("tweets", function (err, collection) {
 
-
-                    // TODO: replace with real last timestam
+                    // TODO: replace with real last timestamp
                     var prevDate = Date.now() - 60000; // 60sec
 
-
+                    // TODO:remove limit
                     var criteria = {"timestamp": {"$gt": prevDate}};
-                    collection.find(criteria).toArray(function (err, results) {
+                    collection.find(criteria).limit(5).toArray(function (err, results) {
                         console.log("Found " + results.length + " tweets to send");
 
                         if (results.length > 0) {
