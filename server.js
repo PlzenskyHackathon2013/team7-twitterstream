@@ -183,10 +183,6 @@ var SampleApp = function() {
             self.mongoStorage.collection("tweets", function (err, collection) {
                 collection.insert(tweet);
             });
-            var socketsio = io.listen(self.server);
-            socketsio.sockets.on('connection', function (socket) {
-                socket.emit('tweets', tweet);
-            });
 
             console.log(tweet)
         });
@@ -217,7 +213,7 @@ var SampleApp = function() {
         // Start twitter stream monitoring
         self.startMonitor();
         // Start sending stored tweets to defined url
-        self.startSender();
+       // self.startSender();
     };
 
 
@@ -230,6 +226,15 @@ var SampleApp = function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
         });
+
+        var io = require('socket.io').listen(8081);
+        io.sockets.on('connection', function (socket) {
+            socket.emit('news', { hello: 'world' });
+            socket.on('my other event', function (data) {
+                console.log(data);
+            });
+        });
+
     };
 
 };   /*  Sample Application.  */
