@@ -32,6 +32,11 @@
                     <div id="counter">0</div>
                 </div>
 
+                <h3>Keywords</h3>
+                <div class="alert alert-info">
+                    <div id="keywords"></div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -48,6 +53,7 @@
 <script>
     $(function () {
         $("#counter").load("/tweetscount");
+        $("#keywords").load("/tweetskeywords");
 
         var socket = io.connect(window.location.hostname);
         socket.on('tweet', function (tweet) {
@@ -63,7 +69,7 @@
                 $("#tweets").children().last().remove();
             }
             $("#tweets").prepend(tweet_html);
-            $("#counter").text(parseInt($("#counter").text())+1);
+                $("#counter").text(parseInt($("#counter").text())+1);
         });
     });
 </script>
