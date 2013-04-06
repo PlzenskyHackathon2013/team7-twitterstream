@@ -16,7 +16,7 @@
   "homepage": "http://openshift.redhat.com/",
   "repository": {
     "type": "git",
-    "url": "https://gitub.com/openshift/origin-server"
+    "url": "https://gitub.com/openshift/crankcase"
   },
 
   "engines": {
@@ -25,6 +25,7 @@
   },
 
   "dependencies": {
+    "express": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
