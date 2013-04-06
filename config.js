@@ -1,6 +1,7 @@
 module.exports = {
 
     // demo user hackathonTwit/lorem12ipsum
+    // only one application with this account can be run
     twitter: {
         consumerKey: "lakn8LGFoAogtKaWkk8Rg",
         consumerSecret: "XaKms3yUQ9oDWsnhf7Y4Isp8Zz0vQjfEmU40G2WI",
@@ -11,7 +12,7 @@ module.exports = {
         keywords: "prague"
     },
     submit: {
-        url:"http://localhost",
+        url:"http://www.tomas-dvorak.cz/listener.php",
         period: 1000 * 10 // 10secs
     }
 

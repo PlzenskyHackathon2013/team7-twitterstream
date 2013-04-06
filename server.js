@@ -180,6 +180,7 @@ var SampleApp = function() {
         var stream = self.twitter.stream('statuses/filter', {track: config.monitor.keywords});
         stream.on('tweet', function (tweet) {
             self.mongoStorage.collection("tweets", function (err, collection) {
+                tweet['timestamp'] = Date.now();
                 collection.insert(tweet);
             });
 
@@ -189,13 +190,56 @@ var SampleApp = function() {
                     console.log(data);
                 });
             });
-            console.log(tweet)
+            console.log("New tweet stored");
+            //console.log(tweet)
         });
     };
 
     self.startSender = function () {
         setInterval(function () {
-            console.log("Sending tweets to url " + config.submit.url);
+            try {
+
+                console.log("Sending tweets to url " + config.submit.url);
+                var querystring = require('querystring');
+
+                self.mongoStorage.collection("tweets", function (err, collection) {
+
+
+                    // TODO: replace with real last timestam
+                    var prevDate = Date.now() - 60000; // 60sec
+
+
+                    var criteria = {"timestamp": {"$gt": prevDate}};
+                    collection.find(criteria).toArray(function (err, results) {
+                        console.log("Found " + results.length + " tweets to send");
+
+                        if (results.length > 0) {
+                            var data = results;
+                            var request = require('request');
+
+                            request.post(
+                                config.submit.url,
+                                { form: { tweets: data } },
+                                function (error, response, body) {
+                                    if (!error && response.statusCode == 200) {
+                                        console.log(body)
+                                    } else {
+                                        console.log(error);
+                                    }
+                                }
+                            );
+                        } else {
+                            console.log("No tweet to submit, skipping");
+                        }
+
+                    });
+                });
+
+
+            }
+            catch (err) {
+                console.log("ERROR: " + err);
+            }
         }, config.submit.period);
     };
 
@@ -218,7 +262,7 @@ var SampleApp = function() {
         // Start twitter stream monitoring
         self.startMonitor();
         // Start sending stored tweets to defined url
-       // self.startSender();
+        self.startSender();
     };
 
 
@@ -231,6 +275,7 @@ var SampleApp = function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
             var io = require('socket.io').listen(require('http').createServer(self.app));
+            //var io = require('socket.io').listen(8081);
             self.sockets = io;
         });
     };

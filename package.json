@@ -28,7 +28,8 @@
     "express": "*",
     "mongodb": "*",
     "socket.io": "*",
-    "twit": "*"
+    "twit": "*",
+    "request" : "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
